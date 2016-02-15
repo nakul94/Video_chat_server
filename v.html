@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>V-Chat web application</title>
+		<meta name="generator" content="Bootply" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<link href="css/styles.css" rel="stylesheet">
+        <link href="css/styles1.css" rel="stylesheet">
+        <!--       
+         
+        video start
+         
+         
+         -->
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+        
+<script type="text/javascript" src="js/peer.js"></script>
+<script>
+    
+    // Compatibility shim
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    
+    // This object will take in an array of XirSys STUN / TURN servers
+    // and override the original config object
+    var customConfig;
+    
+    // Call XirSys ICE servers
+    $.ajax({
+           type: "POST",
+           dataType: "json",
+           url: "https://api.xirsys.com/getIceServers",
+           data: {
+           ident: "nakul",
+           secret: "a9f95517-f7dc-4953-a4fc-b557927106f1",
+           domain: "video.the-nakul.com",
+           application: "default",
+           room: "default",
+           secure: 1
+           },
+           success: function (data, status) {
+           // data.d is where the iceServers object lives
+           customConfig = data.d;
+           console.log(customConfig);
+           },
+           async: false
+           });
+           
+           // PeerJS object
+           var peer = new Peer({
+                               key: 'lwjd5qra8257b9',debug: 3,config: customConfig
+                                           });
+    
+    
+                                                                                   
+                                                                                   peer.on('open', function() {  $('#my-id').text(peer.id);  } );
+                                                                                   
+                                                                                   // Receiving a call
+                                                                                   peer.on('call', function(call){
+                                                                                           // Answer the call automatically (instead of prompting user) for demo purposes
+                                                                                           call.answer(window.localStream);
+                                                                                           step3(call); });
+                                                                                           
+                                                                                           peer.on('error', function(err){ alert(err.message);
+                                                                                                   // Return to step 2 if error occurs
+                                                                                                   step2();
+                                                                                                   });
+                                                                                                   
+                                                                                                   // Click handlers setup
+                                                                                                   $(function(){
+                                                                                                     $('#make-call').click(function(){
+                                                                                                                           // Initiate a call!
+                                                                                                                           var call = peer.call($('#callto-id').val(), window.localStream);
+                                                                                                                           
+                                                                                                                           step3(call);
+                                                                                                                           });
+                                                                                                     
+                                                                                                     $('#end-call').click(function(){
+                                                                                                                          window.existingCall.close();
+                                                                                                                          step2();
+                                                                                                                          });
+                                                                                                     
+                                                                                                     // Retry if getUserMedia fails
+                                                                                                     $('#step1-retry').click(function(){
+                                                                                                                             $('#step1-error').hide();
+                                                                                                                             step1();
+                                                                                                                             });
+                                                                                                     
+                                                                                                     // Get things started
+                                                                                                     step1();
+                                                                                                     });
+                                                                                                     
+                                                                                                     function step1 () {
+                                                                                                         // Get audio/video stream
+                                                                                                         navigator.getUserMedia({audio: true, video: true}, function(stream){
+                                                                                                                                // Set your video displays
+                                                                                                                                $('#my-video').prop('src', URL.createObjectURL(stream));
+                                                                                                                                
+                                                                                                                                window.localStream = stream;
+                                                                                                                                step2();
+                                                                                                                                }, function(){ $('#step1-error').show(); });
+                                                                                                     }
+
+function step2 () {
+    $('#step1, #step3').hide();
+    $('#step2').show();
+}
+
+function step3 (call) {
+    // Hang up on an existing call if present
+    if (window.existingCall) {
+        window.existingCall.close();
+    }
+    
+    // Wait for stream on the call, then set peer video display
+    call.on('stream', function(stream){
+            $('#their-video').prop('src', URL.createObjectURL(stream));
+            });
+            
+            // UI stuff
+            window.existingCall = call;
+            $('#their-id').text(call.peer);
+            call.on('close', step2);
+            $('#step1, #step2').hide();
+            $('#step3').show();
+}
+
+    </script>
+
+
+<!--   video closed    -->
+
+
+            
+            
+</head>
+
+<body bgcolor="white">
+ <script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '366411370222203',
+      xfbml      : true,
+      version    : 'v2.2'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>   
+<div
+  class="fb-like"
+  data-share="true"
+  data-width="450"
+  data-show-faces="true">
+</div>    
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="http://video.the-chopra.com">application</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            
+        </div>
+      </div>
+</nav>
+
+
+
+    <!-- Steps -->
+    <div width="100%" float="bottom">
+       
+       
+       <center>
+       <h2>Video Chat</h2>
+        
+        <!-- Get local audio/video stream -->
+        <div id="step1">
+            <p>Please click `allow` on the top of the screen so we can access your webcam and microphone for calls.</p>
+            <div id="step1-error">
+                <p>Failed to access the webcam and microphone. Make sure to run this demo on an http server and click allow when asked for permission by the browser.</p>
+                <a href="#" class="pure-button pure-button-error" id="step1-retry">Try again</a>
+            </div>
+        </div>
+        
+        <!-- Make calls to others -->
+        <div id="step2">
+            <p>Your id: <span id="my-id">...</span></p> <?php echo "hi this your id".$peer_id; ?>
+            <p>Share this id with others so they can call you.</p>
+            <h3>Make a call</h3>
+            <div class="pure-form">
+                <input type="text" placeholder="Call user id..." id="callto-id">
+                    <a href="#" class="pure-button pure-button-success" id="make-call">Call</a>
+                    </div>
+        </div>
+        </br></br>
+        </center>
+        <hr>
+        <hr>
+    <!--  video part  -->
+        <div width="100%">
+            <video id="their-video" autoplay style="float:left" width="600px" height="300px"></video>
+            <video id="my-video" muted="true" autoplay style="float:right" width="600px" height="300px"></video>
+        </div>
+        
+        
+        <!-- Call in progress -->
+        <div id="step3">
+            <p>Currently in call with <span id="their-id">...</span></p>
+            <p><a href="#" class="pure-button pure-button-error" id="end-call">End call</a></p>
+        </div>
+    </div>
+    
+
+<!--<footer>
+  <center><p>©2015 Company</p></center>
+</footer> -->
+
+	<!-- script references -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/scripts.js"></script>
+	</body>
+</html>
