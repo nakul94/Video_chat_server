@@ -1,14 +1,14 @@
 Video Chat server
-
-Technologies Used:
- WebRTC
- Node.js
- Peer.js
+<Br>
+Technologies Used:<bR>
+ WebRTC<br>
+ Node.js<Br>
+ Peer.js<br>
  Stun Server for Random number generator
-
-Functionality:
- Text + Video Chat
- File sharing
- No need of plugin
+<BR><br>
+Functionality:<br>
+ Text + Video Chat<br>
+ File sharing<Br>
+ No need of plugin<Br>
   
   
